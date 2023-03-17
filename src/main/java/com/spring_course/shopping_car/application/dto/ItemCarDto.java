@@ -12,9 +12,9 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class ItemCarDto {
 
-    @NotBlank
-    @NotEmpty
-    @NotNull
+    @NotBlank(message = "valor requerido")
+    @NotEmpty(message = "longitud de la cadena mayor a 0")
+    @NotNull(message = "valor requerido")
     private String name;
 
     @NotNull

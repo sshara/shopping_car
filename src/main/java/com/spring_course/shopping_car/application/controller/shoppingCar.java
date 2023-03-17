@@ -17,7 +17,7 @@ import java.util.List;
 public class shoppingCar {
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto> getShoppingCarById(@PathVariable(required = true) @Min(1) String id){
+    public ResponseEntity<ResponseDto> getShoppingCarById(@PathVariable(required = true) @Min(1) int id){
         ResponseEntity<ResponseDto> response;
         ResponseDto responseDto = new ResponseDto<>();
 
@@ -49,7 +49,7 @@ public class shoppingCar {
         ResponseDto responseDto = new ResponseDto<>();
         try {
             responseDto.setCode("00");
-            responseDto.setMessage("Objecto creado correctamente");
+            responseDto.setMessage("Objeto creado correctamente");
             response = new ResponseEntity(responseDto, HttpStatus.OK);
         }catch (Exception e){
             responseDto.setCode("02");
@@ -78,7 +78,7 @@ public class shoppingCar {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto> deleteShoppingCar(@PathVariable(required = true) @Min(1) String id){
+    public ResponseEntity<ResponseDto> deleteShoppingCar(@PathVariable(required = true) @Min(1) int id){
 
         ResponseEntity<ResponseDto> response;
         ResponseDto responseDto = new ResponseDto<>();
