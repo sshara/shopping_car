@@ -3,6 +3,7 @@ package com.spring_course.shopping_car.application.controller;
 import com.spring_course.shopping_car.application.dto.ItemCarDto;
 import com.spring_course.shopping_car.application.dto.ResponseDto;
 import com.spring_course.shopping_car.application.dto.ShoppingcarDto;
+import com.spring_course.shopping_car.application.entities.Recibo;
 import com.spring_course.shopping_car.application.service.ShoppingCarService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,11 @@ public class ShoppingCar {
 
         return new ResponseEntity<>(shoppingCarService.getShoppingCarById(id), HttpStatus.OK);
 
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Recibo>> getAll(){
+        return  new ResponseEntity<>(shoppingCarService.getAll(), HttpStatus.OK);
     }
 
     @PostMapping ()
@@ -69,6 +75,8 @@ public class ShoppingCar {
 
         return response;
     }
+
+
 
 
 }

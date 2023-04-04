@@ -3,6 +3,10 @@ package com.spring_course.shopping_car.application.service;
 import com.spring_course.shopping_car.application.dto.ItemCarDto;
 import com.spring_course.shopping_car.application.dto.ResponseDto;
 import com.spring_course.shopping_car.application.dto.ShoppingcarDto;
+import com.spring_course.shopping_car.application.entities.Car;
+import com.spring_course.shopping_car.application.entities.Recibo;
+import com.spring_course.shopping_car.application.entities.Venta;
+import com.spring_course.shopping_car.application.repository.IReciboRepository;
 import com.spring_course.shopping_car.application.utils.ShoppingCarUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +21,10 @@ public class ShoppingCarImpl implements ShoppingCarService {
 
     @Autowired
     private ShoppingCarUtils shoppingCarUtils;
+
+    @Autowired
+    private IReciboRepository reciboRepository;
+
 
     @Override
     public ResponseDto getShoppingCarById(int id) {
@@ -52,6 +60,29 @@ public class ShoppingCarImpl implements ShoppingCarService {
         ResponseEntity<ResponseDto> response;
         ResponseDto responseDto = new ResponseDto<>();
         try {
+            Car carItem;
+            List<Car> items = new ArrayList<>();
+            Venta venta;
+            List<Venta> ventas =  new ArrayList<>();
+            Recibo recibo = new Recibo();
+            recibo.setNombre("Pepito Perez");
+            for(ItemCarDto itemsCar : shoppingCar.getItems()){
+                items.clear();
+                carItem = new Car();
+                carItem.setName(itemsCar.getName());
+                carItem.setPrice(itemsCar.getPrice());
+                items.add(carItem);
+                venta = new Venta();
+                venta.setAmount(itemsCar.getAmount());
+                venta.setDescription(itemsCar.getDescription());
+                venta.setCars(items);
+                ventas.add(venta);
+            }
+
+            recibo.setVentas(ventas);
+
+            reciboRepository.save(recibo);
+
 
             responseDto.setCode("00");
             responseDto.setMessage("Objeto creado correctamente");
@@ -62,8 +93,13 @@ public class ShoppingCarImpl implements ShoppingCarService {
             responseDto.setCode("02");
             responseDto.setMessage("Error al crear el objeto, contacte con soporte");
             response = new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
         }
 
         return responseDto;
+    }
+
+    public List<Recibo> getAll(){
+        return reciboRepository.findAll();
     }
 }
