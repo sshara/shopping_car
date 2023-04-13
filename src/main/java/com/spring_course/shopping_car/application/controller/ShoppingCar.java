@@ -36,18 +36,24 @@ public class ShoppingCar {
         return  new ResponseEntity<>(shoppingCarService.getAll(), HttpStatus.OK);
     }
 
+    @GetMapping("findByDescripcion/{descripcion}")
+    public ResponseEntity<List<Recibo>> findByDescripcion(@PathVariable(required = true) String descripcion){
+        return new ResponseEntity<>(shoppingCarService.getByDescripcion(descripcion), HttpStatus.OK);
+    }
+
     @PostMapping ()
     public ResponseEntity<ResponseDto> createShoppingCar(@Valid @RequestBody ShoppingcarDto shoppingCar){
         return new ResponseEntity<>(shoppingCarService.createShoppingCar(shoppingCar), HttpStatus.OK);
     }
 
     @PutMapping()
-    public ResponseEntity<ResponseDto> updateShoppingCarByItem(@Valid @RequestBody ItemCarDto itemCar){
+    public ResponseEntity<ResponseDto> updateShoppingCarByItem(@Valid @RequestBody Recibo itemCar){
         ResponseEntity<ResponseDto> response;
         ResponseDto responseDto = new ResponseDto<>();
         try {
             responseDto.setCode("00");
             responseDto.setMessage("Objecto actualizado correctamente");
+            responseDto.setData(shoppingCarService.update(itemCar));
             response = new ResponseEntity(responseDto, HttpStatus.OK);
         }catch (Exception e){
             responseDto.setCode("02");
@@ -63,11 +69,11 @@ public class ShoppingCar {
 
         ResponseEntity<ResponseDto> response;
         ResponseDto responseDto = new ResponseDto<>();
-        try {
+        if(shoppingCarService.delete(id)){
             responseDto.setCode("00");
             responseDto.setMessage("Objecto eliminado correctamente");
             response = new ResponseEntity(responseDto, HttpStatus.OK);
-        }catch (Exception e){
+        }else{
             responseDto.setCode("02");
             responseDto.setMessage("No fue posible eliminar el objecto, contacte con soporte");
             response = new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);

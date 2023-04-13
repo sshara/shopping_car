@@ -14,4 +14,10 @@ public interface ShoppingCarService {
 
     List<Recibo> getAll();
 
+    List<Recibo> getByDescripcion(String descripcion);
+
+    boolean delete(Integer id);
+
+    Recibo update(Recibo recibo);
+
 }

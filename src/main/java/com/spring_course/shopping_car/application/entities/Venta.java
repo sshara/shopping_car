@@ -28,7 +28,6 @@ public class Venta implements Serializable {
     @JoinColumn(name = "id_venta")
     private List<Car> cars = new ArrayList<>();
 
-    /*@ManyToOne(fetch =  FetchType.LAZY)
-    @JoinColumn(name = "id_recibo")
-    private Recibo recibo;*/
+    @Column(name = "id_recibo")
+    private Integer idRecibo;
 }
