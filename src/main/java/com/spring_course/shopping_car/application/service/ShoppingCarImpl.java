@@ -102,4 +102,21 @@ public class ShoppingCarImpl implements ShoppingCarService {
     public List<Recibo> getAll(){
         return reciboRepository.findAll();
     }
+
+    public List<Recibo> getByDescripcion(String descripcion){
+        return reciboRepository.findByDescription(descripcion);
+    }
+
+    public boolean delete(Integer id){
+        try{
+            reciboRepository.deleteById(id);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    public Recibo update(Recibo recibo){
+        return reciboRepository.save(recibo);
+    }
 }

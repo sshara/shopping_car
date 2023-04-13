@@ -21,7 +21,4 @@ public class Car implements Serializable {
 
     @Column(name = "price")
     private Double price;
-
-    /*@ManyToOne(fetch =  FetchType.LAZY)
-    private Venta venta;*/
 }
