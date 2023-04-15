@@ -1,4 +1,4 @@
-package com.spring_course.shopping_car.application.util.handler;
+package com.spring_course.shopping_car.infrastructure.util.handler;
 
 import com.spring_course.shopping_car.application.dto.ResponseDto;
 import org.springframework.http.HttpStatus;
