@@ -4,6 +4,7 @@ import com.spring_course.shopping_car.application.dto.ItemCarDto;
 import com.spring_course.shopping_car.application.dto.ResponseDto;
 import com.spring_course.shopping_car.application.dto.ShoppingcarDto;
 import com.spring_course.shopping_car.application.service.ShoppingCarService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.util.List;
 
 @RestController
 @RequestMapping("/shoppingcar")
-public class ShoppingCar {
+@Tag(name = "ShoppingCar", description = "gestion de carrito de compras")
+public class ShoppingCar{
 
     @Autowired
     private ShoppingCarService shoppingCarService;

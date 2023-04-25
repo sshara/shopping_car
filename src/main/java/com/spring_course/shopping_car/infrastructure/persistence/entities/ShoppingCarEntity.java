@@ -1,26 +1,31 @@
 package com.spring_course.shopping_car.infrastructure.persistence.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name="shopping_cars")
-public class ShoppingCar implements Serializable {
+public class ShoppingCarEntity{
+
+
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy =  GenerationType.SEQUENCE, generator ="sequence_shopping_car")
     @SequenceGenerator(name = "sequence_shopping_car", allocationSize = 1)
+    @Column(name = "id")
     private Integer id;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "shoppingCar")
+    @OneToMany(mappedBy = "shoppingCar", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<Item> items;
+    private List<ItemEntity> items;
 
 }

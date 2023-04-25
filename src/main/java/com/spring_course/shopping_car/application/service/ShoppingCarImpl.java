@@ -3,13 +3,13 @@ package com.spring_course.shopping_car.application.service;
 import com.spring_course.shopping_car.application.dto.ItemCarDto;
 import com.spring_course.shopping_car.application.dto.ResponseDto;
 import com.spring_course.shopping_car.application.dto.ShoppingcarDto;
-import com.spring_course.shopping_car.infrastructure.persistence.entities.Item;
-import com.spring_course.shopping_car.infrastructure.persistence.entities.ShoppingCar;
+import com.spring_course.shopping_car.infrastructure.persistence.entities.ItemEntity;
+import com.spring_course.shopping_car.infrastructure.persistence.entities.ShoppingCarEntity;
+import com.spring_course.shopping_car.infrastructure.persistence.mapper.ShoppingCarMapper;
+import com.spring_course.shopping_car.infrastructure.persistence.repository.ItemRepositoryJpa;
 import com.spring_course.shopping_car.infrastructure.persistence.repository.ShoppingCarRepositoryJpa;
 import com.spring_course.shopping_car.application.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,11 +20,10 @@ import java.util.Optional;
 public class ShoppingCarImpl implements ShoppingCarService {
 
     @Autowired
-    private Utils shoppingCarUtils;
-
-    @Autowired
     private ShoppingCarRepositoryJpa shoppingCarRepositoryJpa;
 
+    @Autowired
+    private ShoppingCarMapper shoppingCarMapper;
 
     @Override
     public ResponseDto getShoppingCarById(int id) {
@@ -32,22 +31,7 @@ public class ShoppingCarImpl implements ShoppingCarService {
         ResponseDto responseDto = new ResponseDto<ShoppingcarDto>();
 
         try {
-
-            Optional<ShoppingCar> shoppingCarOptional = shoppingCarRepositoryJpa.findById(id);
-            assert shoppingCarOptional.isPresent();
-
-            ShoppingCar shoppingCar = shoppingCarOptional.get();
-            assert !shoppingCar.getItems().isEmpty();
-
-            List<ItemCarDto> items = new ArrayList<>();
-            for (Item item:shoppingCar.getItems()) {
-                ItemCarDto itemCarDto = new ItemCarDto(item.getName(),
-                        item.getAmount(),
-                        item.getPrice(),
-                        item.getDescription());
-                items.add(itemCarDto);
-            }
-            responseDto.setData(new ShoppingcarDto(String.valueOf(shoppingCar.getId()), items));
+            responseDto.setData(shoppingCarMapper.toShoppingCarDto((shoppingCarRepositoryJpa.findById(id)).get()));
             responseDto.setCode("00");
             responseDto.setMessage("Ok");
 
@@ -63,7 +47,9 @@ public class ShoppingCarImpl implements ShoppingCarService {
     public ResponseDto createShoppingCar(ShoppingcarDto shoppingCar) {
         ResponseDto responseDto = new ResponseDto<>();
         try {
-
+            shoppingCarRepositoryJpa.save(shoppingCarMapper.fromShoppingCarDto(shoppingCar));
+            responseDto.setCode("00");
+            responseDto.setMessage("Objecto creado correctamente");
 
         }catch (Exception e){
             responseDto.setCode("02");
@@ -78,29 +64,13 @@ public class ShoppingCarImpl implements ShoppingCarService {
         ResponseDto responseDto = new ResponseDto<List<ShoppingcarDto>>();
         try{
 
-            List<ShoppingCar> shoppingCars = shoppingCarRepositoryJpa.findAll();
-            List<ShoppingcarDto> shoppingcarDtos = new ArrayList<>();
-            assert !shoppingCars.isEmpty();
-            for (ShoppingCar shoppingcar: shoppingCars) {
-
-                assert !shoppingcar.getItems().isEmpty();
-                List<ItemCarDto> items = new ArrayList<>();
-                for (Item item:shoppingcar.getItems()) {
-                    ItemCarDto itemCarDto = new ItemCarDto(item.getName(),
-                            item.getAmount(),
-                            item.getPrice(),
-                            item.getDescription());
-                    items.add(itemCarDto);
-                }
-                shoppingcarDtos.add(new ShoppingcarDto(String.valueOf(shoppingcar.getId()), items));
-            }
-            responseDto.setData(shoppingcarDtos);
+            responseDto.setData(shoppingCarMapper.toShoppingCarDto(shoppingCarRepositoryJpa.findAll()));
             responseDto.setCode("00");
-            responseDto.setMessage("Objecto eliminado correctamente");
+            responseDto.setMessage("Lista de todos los carritos de compras");
 
         }catch (Exception e){
             responseDto.setCode("02");
-            responseDto.setMessage("No fue posible eliminar el objecto, contacte con soporte");
+            responseDto.setMessage("Error al traer lista de todos los carritos de compras");
         }
 
         return responseDto;

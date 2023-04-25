@@ -1,21 +1,22 @@
 package com.spring_course.shopping_car.infrastructure.persistence.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity
 @Table(name="items")
-public class Item{
+@AllArgsConstructor
+@NoArgsConstructor
+public class ItemEntity {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy =  GenerationType.SEQUENCE, generator ="sequence_item")
     @SequenceGenerator(name = "sequence_item", allocationSize = 1)
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "name")
@@ -32,6 +33,7 @@ public class Item{
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="id_shopping_car")
-    private ShoppingCar shoppingCar;
+    @JoinColumn(name="id_shopping_car", nullable = false)
+    private ShoppingCarEntity shoppingCar;
+
 }

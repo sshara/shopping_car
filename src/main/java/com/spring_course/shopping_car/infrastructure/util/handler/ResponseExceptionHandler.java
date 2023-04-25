@@ -34,4 +34,14 @@ public class ResponseExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ResponseDto> handleMethodArgumentNotValid(
+            Exception ex) {
+        ResponseDto errorResponse = new ResponseDto();
+        errorResponse.setCode("04");
+        errorResponse.setMessage(ex.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
 }
