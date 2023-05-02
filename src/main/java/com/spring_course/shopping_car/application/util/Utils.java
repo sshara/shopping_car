@@ -10,5 +10,10 @@ public class Utils {
         return 1.22;
     }
 
+    public int suma(int number1, int number2){
+
+        return number1 + number2;
+    }
+
 
 }
