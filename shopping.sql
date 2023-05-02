@@ -32,3 +32,13 @@ CREATE SEQUENCE IF NOT EXISTS sequence_item
 	
 	ALTER SEQUENCE sequence_item
     OWNER TO postgres;
+	
+CREATE SEQUENCE IF NOT EXISTS sequence_shopping_car
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+	ALTER SEQUENCE sequence_shopping_car
+    OWNER TO postgres;

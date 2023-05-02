@@ -46,8 +46,4 @@ public class ShoppingCar{
     public ResponseEntity<ResponseDto> deleteShoppingCar(@PathVariable(required = true) @Min(1) int id){
         return new ResponseEntity<ResponseDto>(shoppingCarService.delete(id), HttpStatus.OK);
     }
-
-
-
-
 }
