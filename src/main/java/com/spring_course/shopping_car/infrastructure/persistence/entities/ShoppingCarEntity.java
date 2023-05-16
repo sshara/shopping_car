@@ -24,7 +24,7 @@ public class ShoppingCarEntity{
     @Column(name = "id")
     private Integer id;
 
-    @OneToMany(mappedBy = "shoppingCar", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "shoppingCar", fetch = FetchType.EAGER, cascade = CascadeType.MERGE, orphanRemoval = true)
     @ToString.Exclude
     private List<ItemEntity> items;
 

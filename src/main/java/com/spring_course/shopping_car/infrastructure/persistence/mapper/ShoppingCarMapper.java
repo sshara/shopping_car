@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ShoppingCarMapper {
 
-    @Mapping(source = "id", target = "id", ignore = true)
+
     @BeanMapping(qualifiedByName = "FromShoppingCarDto")
     ShoppingCarEntity fromShoppingCarDto(ShoppingcarDto shoppingcarDto);
 

@@ -11,6 +11,8 @@ import com.spring_course.shopping_car.infrastructure.persistence.repository.Shop
 import com.spring_course.shopping_car.application.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,9 @@ public class ShoppingCarImpl implements ShoppingCarService {
 
     @Autowired
     private ShoppingCarRepositoryJpa shoppingCarRepositoryJpa;
+
+    @Autowired
+    private ItemRepositoryJpa itemRepositoryJpa;
 
     @Autowired
     private ShoppingCarMapper shoppingCarMapper;
@@ -43,23 +48,6 @@ public class ShoppingCarImpl implements ShoppingCarService {
         return responseDto;
     }
 
-    @Override
-    public ResponseDto createShoppingCar(ShoppingcarDto shoppingCar) {
-        ResponseDto responseDto = new ResponseDto<>();
-        try {
-            shoppingCarRepositoryJpa.save(shoppingCarMapper.fromShoppingCarDto(shoppingCar));
-            responseDto.setCode("00");
-            responseDto.setMessage("Objecto creado correctamente");
-
-        }catch (Exception e){
-            responseDto.setCode("02");
-            responseDto.setMessage("Error al crear el objeto, contacte con soporte");
-            e.printStackTrace();
-        }
-
-        return responseDto;
-    }
-
     public ResponseDto getAll(){
         ResponseDto responseDto = new ResponseDto<List<ShoppingcarDto>>();
         try{
@@ -76,6 +64,51 @@ public class ShoppingCarImpl implements ShoppingCarService {
         return responseDto;
     }
 
+    @Override
+    public ResponseDto createShoppingCar(ShoppingcarDto shoppingCar) {
+        ResponseDto responseDto = new ResponseDto<>();
+        try {
+
+            ShoppingCarEntity shoppingCarEntity = shoppingCarMapper.fromShoppingCarDto(shoppingCar);
+            shoppingCarRepositoryJpa.save(shoppingCarEntity);
+            itemRepositoryJpa.saveAll(shoppingCarEntity.getItems());
+            responseDto.setCode("00");
+            responseDto.setMessage("Objecto creado correctamente");
+
+        }catch (Exception e){
+            responseDto.setCode("02");
+            responseDto.setMessage("Error al crear el objeto, contacte con soporte");
+            e.printStackTrace();
+        }
+
+        return responseDto;
+    }
+
+    public ResponseDto update(ItemCarDto itemCar, Integer idShoppingCar){
+        ResponseDto responseDto = new ResponseDto<>();
+
+        try {
+            Optional<ShoppingCarEntity> shoppingCarEntity = shoppingCarRepositoryJpa.findById(idShoppingCar);
+            assert shoppingCarEntity.isPresent();
+            ShoppingcarDto shoppingcarDto = shoppingCarMapper.toShoppingCarDto(shoppingCarEntity.get());
+            if(shoppingcarDto.getItems().contains(itemCar)){
+                responseDto.setCode("03");
+                responseDto.setMessage("El item ya existe en el carrito");
+            }else{
+                shoppingcarDto.getItems().add(itemCar);
+                ShoppingCarEntity shoppingCar = shoppingCarMapper.fromShoppingCarDto(shoppingcarDto);
+                shoppingCarRepositoryJpa.save(shoppingCar);
+                //itemRepositoryJpa.saveAll(shoppingCar.getItems());
+                responseDto.setCode("00");
+                responseDto.setMessage("Objecto actualizado correctamente");
+            }
+
+        }catch (Exception e){
+            responseDto.setCode("02");
+            responseDto.setMessage("Error al actualizar el objeto, contacte con soporte");
+        }
+        return responseDto;
+    }
 
     public ResponseDto delete(Integer id){
         ResponseDto responseDto = new ResponseDto<>();
@@ -89,23 +122,6 @@ public class ShoppingCarImpl implements ShoppingCarService {
             responseDto.setMessage("No fue posible eliminar el objecto, contacte con soporte");
         }
 
-        return responseDto;
-    }
-
-    public ResponseDto update(ItemCarDto itemCar, Integer idShoppingCar){
-        ResponseDto responseDto = new ResponseDto<>();
-
-        try {
-            /* Tarea:
-                implementar el metodo update, tenemos como parametros de entrada el id del carrito a actualizar
-                y un item para agregar.
-            */
-            responseDto.setCode("00");
-            responseDto.setMessage("Objecto actualizado correctamente");
-        }catch (Exception e){
-            responseDto.setCode("02");
-            responseDto.setMessage("Error al actualizar el objeto, contacte con soporte");
-        }
         return responseDto;
     }
 }
